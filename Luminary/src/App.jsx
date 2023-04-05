@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
@@ -32,3 +33,24 @@ function App() {
 }
 
 export default App
+=======
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Dashboard, Auth } from "@/layouts";
+import Index from "./components/Index";
+import TimetablePage from "./components/TimetablePage";
+import SideBar from "./components/SideBar";
+import NullPage from "./components/NullPage";
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/auth/sign-in" replace />} />
+      <Route path="/dashboard/*" element={<Dashboard />} />
+      <Route path="/auth/*" element={<Auth />} />
+      <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+    </Routes>
+  );
+}
+
+export default App;
+>>>>>>> c2333b53917b65074f3e46dfd781d58cc876b835
