@@ -13,7 +13,29 @@ import {
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { authorsTableData, projectsTableData } from "@/data";
 import { Link } from "react-router-dom";
+<<<<<<< Updated upstream:Luminary/src/pages/dashboard/moduleinfo.jsx
 export function Moduleinfo() {
+=======
+import { useState, useEffect } from "react";
+import { db } from "@/firebase";
+import { collection, doc, getDocs} from "firebase/firestore";
+
+export function Schedule() {
+
+const [moduleDetail, setDetail] = useState([])
+const detailCollectionRef = collection(db, "moduleDetail")
+
+useEffect(() => {
+  
+
+  const getDetail = async ()=>{
+    const data = await getDocs(detailCollectionRef);
+    setDetail(data.docs.map((doc)=>({...doc.data(), id: doc.id})))
+  }
+  getDetail()  
+}, [])
+
+>>>>>>> Stashed changes:Luminary/src/pages/dashboard/Schedule.jsx
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -26,7 +48,7 @@ export function Moduleinfo() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Index", "Type", "Time", "Venue", ""].map((el) => (
+                {["Module", "Type", "Time", "Venue", ""].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -42,16 +64,15 @@ export function Moduleinfo() {
               </tr>
             </thead>
             <tbody>
-              {authorsTableData.map(
-                ({ img, name, email, job, online, date }, key) => {
-                  const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
+            {moduleDetail.map((detail, key) => {
+                   const className = `py-3 px-5 ${
+                    key === detailCollectionRef.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
 
                   return (
-                    <tr key={name}>
+                    <tr>
                       <td className={className}>
                         <div className="flex items-center gap-4">
                           <div>
@@ -60,7 +81,7 @@ export function Moduleinfo() {
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              10705
+                              {detail.module}
                             </Typography>
                           </div>
                         </div>
@@ -71,7 +92,7 @@ export function Moduleinfo() {
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              Lab
+                              {detail.type}
                             </Typography>
               
                       </td>
@@ -81,7 +102,7 @@ export function Moduleinfo() {
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              12:30 - 2:30
+                              {detail.time}
                             </Typography>
                       </td>
                       <td className={className}>
@@ -90,7 +111,7 @@ export function Moduleinfo() {
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              SWL3
+                              {detail.venue}
                             </Typography>
                       </td>
                       <Link to = "/dashboard/Tables" >

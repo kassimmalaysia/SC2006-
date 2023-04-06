@@ -46,6 +46,17 @@ export const routes = [
         path: "/moduleinfo",
         element: <Moduleinfo />,
       },
+<<<<<<< Updated upstream
+=======
+      {
+        icon: <CalendarIcon {...icon} />,
+        name: "Schedule",
+        path: "/Schedule",
+        element: <Schedule />,
+      },
+      
+      
+>>>>>>> Stashed changes
     ],
   },
   {

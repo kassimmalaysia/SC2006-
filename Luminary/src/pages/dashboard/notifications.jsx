@@ -15,10 +15,45 @@ import { authorsTableData, projectsTableData } from "@/data";
 import { Input } from "@material-tailwind/react";
 import { blue } from "@mui/material/colors";
 import { Link } from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
+import { useState, useEffect } from "react";
 import { Dashboard } from "@/layouts";
+import { db } from "@/firebase";
+import { collection, doc, getDocs, addDoc } from "firebase/firestore";
+import { info } from "autoprefixer";
 
-
+<<<<<<< Updated upstream:Luminary/src/pages/dashboard/notifications.jsx
 export function Modules() {
+=======
+export function ModuleInfo() {
+const [newReview, setNewReview] = useState("")
+const [newRating, setNewRating] = useState("1/5")
+
+const [moduleInfo, setModule] = useState([])
+const moduleCollectionRef = collection(db, "moduleInfo")
+const [reviews, setReview] = useState([])
+const reviewCollectionRef = collection(db, "reviews")
+
+const createReview = async () => {
+  await addDoc(reviewCollectionRef, {review: newReview, rating: newRating});
+}
+useEffect(() => {
+  
+
+  const getReview = async ()=>{
+    const data = await getDocs(reviewCollectionRef);
+    setReview(data.docs.map((doc)=>({...doc.data(), id: doc.id})))
+  }
+  getReview()  
+
+const getModule = async ()=>{
+  const data = await getDocs(moduleCollectionRef);
+  setModule(data.docs.map((doc)=>({...doc.data(), id: doc.id})))
+}
+getModule()
+
+}, [])
+>>>>>>> Stashed changes:Luminary/src/pages/dashboard/ModuleInfo.jsx
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -32,7 +67,7 @@ export function Modules() {
             <thead>
               <tr>
                 {[
-                  "Module name",
+                  "Module",
                   "Pre-requisities",
                   "AU",
                   "Grading Type",
@@ -54,16 +89,16 @@ export function Modules() {
               </tr>
             </thead>
             <tbody>
-              {authorsTableData.map(
-                ({ img, name, email, job, online, date }, key) => {
-                  const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
+              {moduleInfo.map((module, key) => {
+                   const className = `py-3 px-5 ${
+                    key === moduleCollectionRef.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
 
+
                   return (
-                    <tr key={name}>
+                    <tr>
                       <td className={className}>
                         <div className="flex items-center gap-4">
                           <div>
@@ -71,7 +106,8 @@ export function Modules() {
                               variant="h5"
                               className="text-s font-semibold text-blue-gray-600"
                             >
-                              SC2006
+                              {module.moduleName}
+                              
                             </Typography>
                           </div>
                         </div>
@@ -80,32 +116,28 @@ export function Modules() {
                         <Typography 
                         variant="h5"
                         className="text-s font-semibold text-blue-gray-600">
-                          2002
+                          {module.preReq}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Typography 
                         variant="h5"
                         className="text-s font-semibold text-blue-gray-600">
-                          3.0
+                          {module.au}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Typography 
                         variant="h5"
                         className="text-s font-semibold text-blue-gray-600">
-                          Letter Graded
+                          {module.gradingType}
                         </Typography>
                       </td>
                       <td className={className}>
                       <Typography 
                         variant="h6"
                         className="text-s font-semibold text-blue-gray-600">
-                          This course aims to develop your understanding of
-                          fundamental concepts and principles of modern
-                          operating systems, and to build your knowledge on the
-                          design and implementation of main operating system
-                          components.
+                          {module.description}
                         </Typography>
                       </td>
                       <Link to = "/dashboard/moduleinfo" >
@@ -122,9 +154,12 @@ export function Modules() {
                       </td>
                       </Link>
                     </tr>
+                    
                   );
+                  
                 }
               )}
+             
             </tbody>
           </table>
         </CardBody>
@@ -139,16 +174,15 @@ export function Modules() {
         <Typography
           className="text-xs font-semibold text-blue-gray-600"
         ><div className="px-5 flex flex-row w-72 items-end gap-6">
-          <Input variant="static" label="Review" placeholder="Enter Review" />
+          <Input variant="static" label="Review" placeholder="Enter Review" onChange={(event) => {setNewReview(event.target.value)}} />
         
-      <Radio id="1" name="type" label="1/5"defaultChecked />
-      <Radio id="2" name="type" label="2/5"  />
-      <Radio id="3" name="type" label="3/5"  />
-      <Radio id="4" name="type" label="4/5"  />
-      <Radio id="5" name="type" label="5/5"  />
-
+      <Radio id="1" name="type" label="1/5" onClick={(event) => {setNewRating("1/5")}} defaultChecked />
+      <Radio id="2" name="type" label="2/5" onClick={(event) => {setNewRating("2/5")}} />
+      <Radio id="3" name="type" label="3/5" onClick={(event) => {setNewRating("3/5")}} />
+      <Radio id="4" name="type" label="4/5" onClick={(event) => {setNewRating("4/5")}} />
+      <Radio id="5" name="type" label="5/5" onClick={(event) => {setNewRating("5/5")}} />
           <Tooltip content="Material Tailwind">
-      <Button variant="gradient">Submit</Button>
+      <Button onClick={createReview} variant="gradient">Submit</Button>
     </Tooltip>
           </div>
         </Typography>
@@ -173,22 +207,21 @@ export function Modules() {
               </tr>
             </thead>
             <tbody>
-              {projectsTableData.map(
-                ({ img, name, members, budget, completion }, key) => {
-                  const className = `py-3 px-5 ${
-                    key === projectsTableData.length - 1
+            {reviews.map((review, key) => {
+                   const className = `py-3 px-5 ${
+                    key === reviewCollectionRef.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
 
                   return (
-                    <tr key={name}>
+                    <tr>
                       <td className={className}>
                         <Typography
                           variant="small"
                           className="text-xs font-medium text-blue-gray-600"
                         >
-                          4/5
+                          {review.rating}
                         </Typography>
                       </td>
                       <td className={className}>
@@ -196,7 +229,7 @@ export function Modules() {
                           variant="small"
                           className="text-xs font-medium text-blue-gray-600"
                         >
-                          A very hands-on mod. 50% of your grade is the lab project which requires bi-weekly deliverables and self-learning since you have to make an app (mobile or web). The actual content is slightly boring but gets fun at times. Just need to watch the lectures (on 2x) to score well on the final/quizzes. Not very content heavy. 
+                          {review.review}
                         </Typography>
                       </td>
                       <td className={className}>
@@ -205,7 +238,7 @@ export function Modules() {
                             variant="small"
                             className="mb-1 block text-xs font-medium text-blue-gray-600"
                           >
-                            17 March 2023
+                            {review.date}
                           </Typography>
                         </div>
                       </td>

@@ -12,7 +12,11 @@
     "@heroicons/react": "2.0.12",
     "@material-tailwind/react": "^1.2.4",
     "apexcharts": "3.35.5",
+<<<<<<< Updated upstream
     "firebase": "^9.18.0",
+=======
+    "firebase": "^9.19.1",
+>>>>>>> Stashed changes
     "prop-types": "15.8.1",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
